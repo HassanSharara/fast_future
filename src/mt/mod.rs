@@ -276,7 +276,7 @@ impl Handle {
     pub fn current() -> Handle {
         let shared = CURRENT
             .with(|c| c.get())
-            .expect("not inside a fastrt::Runtime");
+            .expect("not inside a fast_future::Runtime");
         Handle { shared }
     }
 
@@ -297,7 +297,7 @@ pub fn spawn<F>(fut: F) -> JoinHandle<F::Output>
 {
     let shared = CURRENT
         .with(|c| c.get())
-        .expect("fastrt::spawn called outside a runtime");
+        .expect("fast_future::spawn called outside a runtime");
     spawn_on(shared, fut)
 }
 
@@ -347,7 +347,7 @@ impl Runtime {
             .enumerate()
             .map(|(id, (local, parker))| {
                 thread::Builder::new()
-                    .name(format!("fastrt-worker-{id}"))
+                    .name(format!("fast_future-worker-{id}"))
                     .spawn(move || worker_main(shared, id, local, parker))
                     .expect("failed to spawn worker thread")
             })

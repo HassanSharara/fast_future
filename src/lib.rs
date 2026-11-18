@@ -1,4 +1,4 @@
-//! fastrt: two small, fast async runtimes.
+//! fast_future: two small, fast async runtimes.
 //!
 //! * [`Runtime`]      - multi-threaded, work-stealing, for `Send` futures.
 //! * [`LocalRuntime`] - single-threaded, for `!Send` futures (`Rc`, `RefCell`, ...).

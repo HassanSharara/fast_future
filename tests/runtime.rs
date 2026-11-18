@@ -1,12 +1,12 @@
 //! Correctness + stress tests for both runtimes.
 //!
 //!   cargo test --release -- --test-threads=1
-//!   $env:FASTRT_SOAK_SECS=300; cargo test --release soak -- --ignored --nocapture
+//!   $env:fast_future_SOAK_SECS=300; cargo test --release soak -- --ignored --nocapture
 //!
-//! If your package is not called `fastrt`, change the line below.
-use fast_future as fastrt;
+//! If your package is not called `fast_future`, change the line below.
+use fast_future as fast_future;
 
-use fastrt::{spawn, spawn_local, yield_now, Handle, LocalRuntime, Runtime};
+use fast_future::{spawn, spawn_local, yield_now, Handle, LocalRuntime, Runtime};
 use std::cell::{Cell, RefCell};
 use std::future::Future;
 use std::pin::Pin;
@@ -490,7 +490,7 @@ static CORE_COUNT: AtomicUsize = AtomicUsize::new(0);
 #[test]
 fn thread_per_core_runs_every_thread() {
     with_timeout(30, "thread_per_core", || {
-        fastrt::run_thread_per_core(4, |i| async move {
+        fast_future::run_thread_per_core(4, |i| async move {
             let local = Rc::new(Cell::new(0));
             let l = local.clone();
             spawn_local(async move { l.set(i + 1) }).await;
@@ -504,11 +504,11 @@ fn thread_per_core_runs_every_thread() {
 // -------------------------------------------------------------------- soak
 
 /// Long random soak. Ignored by default:
-///   $env:FASTRT_SOAK_SECS=600; cargo test --release soak -- --ignored --nocapture
+///   $env:fast_future_SOAK_SECS=600; cargo test --release soak -- --ignored --nocapture
 #[test]
 #[ignore]
 fn soak() {
-    let secs: u64 = std::env::var("FASTRT_SOAK_SECS").ok().and_then(|s| s.parse().ok()).unwrap_or(60);
+    let secs: u64 = std::env::var("fast_future_SOAK_SECS").ok().and_then(|s| s.parse().ok()).unwrap_or(60);
     with_timeout(secs + 120, "soak", move || {
         let start = Instant::now();
         let mut seed = 0xDEAD_BEEFu32;

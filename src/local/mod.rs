@@ -250,7 +250,7 @@ pub fn run_thread_per_core<F, Fut>(threads: usize, make: F)
         .map(|i| {
             let make = make.clone();
             thread::Builder::new()
-                .name(format!("fastrt-local-{i}"))
+                .name(format!("fast_future-local-{i}"))
                 .spawn(move || {
                     let rt = LocalRuntime::new();
                     rt.block_on(make(i));
