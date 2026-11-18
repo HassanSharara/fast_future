@@ -215,6 +215,8 @@ fn spawn_on<F>(shared: &'static Shared, fut: F) -> JoinHandle<F::Output>
     task
 }
 
+
+/// main entry point for each thread worker
 fn worker_main(shared: &'static Shared, id: usize, local: Worker<Runnable>, parker: Parker) {
     let ctx = WorkerCtx { shared: shared as *const Shared, local };
     CTX.with(|c| c.set(&ctx));
